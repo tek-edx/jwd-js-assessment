@@ -24,6 +24,7 @@ window.addEventListener('DOMContentLoaded', () => {
   start.addEventListener('click', function (e) {
     document.querySelector('#quizBlock').style.display = 'block';
     start.style.display = 'none';
+
   });
   // quizArray QUESTIONS & ANSWERS
   // q = QUESTION, o = OPTIONS, a = CORRECT ANSWER
@@ -44,16 +45,31 @@ window.addEventListener('DOMContentLoaded', () => {
       o: ['Sydney', 'Canberra', 'Melbourne', 'Perth'],
       a: 1,
     },
+     {
+      q: 'What is the capital of Nepal',
+      o: ['Pokhara', 'Biratnagar', 'Kathmandu', 'Dhangadhi'],
+      a: 2,
+    },
+    {
+      q: 'Which is highest peak in the world',
+      o: ['Mt.Welligton', 'K2', 'Annapurna', 'Sagarmatha'],
+      a: 3,
+    },
+
   ];
 
   // function to Display the quiz questions and answers from the object
   const displayQuiz = () => {
     const quizWrap = document.querySelector('#quizWrap');
+   
     let quizDisplay = '';
     quizArray.map((quizItem, index) => {
       quizDisplay += `<ul class="list-group">
                    Q - ${quizItem.q}
-                    <li class="list-group-item mt-2" id="li_${index}_0"><input type="radio" name="radio${index}" id="radio_${index}_0"> ${quizItem.o[0]}</li>
+                    <li class="list-group-item mt-2" id="li_${index}_0">
+                    
+                    <input type="radio" name="radio${index}" id="radio_${index}_0"> ${quizItem.o[0]}</li>
+
                     <li class="list-group-item" id="li_${index}_1"><input type="radio" name="radio${index}" id="radio_${index}_1"> ${quizItem.o[1]}</li>
                     <li class="list-group-item"  id="li_${index}_2"><input type="radio" name="radio${index}" id="radio_${index}_2"> ${quizItem.o[2]}</li>
                     <li class="list-group-item"  id="li_${index}_3"><input type="radio" name="radio${index}" id="radio_${index}_3"> ${quizItem.o[3]}</li>
@@ -63,8 +79,32 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+
+  // function to display the countdown 
+
+  const countdown = () => {
+
+    const submit = document.querySelector('#btnSubmit');
+    let counter = 60;
+    timerDisplay = document.querySelector("#time");
+    const timeout = setInterval(() => {
+      counter--;
+      counterDisplay = `00:${counter}`;
+      if (counter < 1) {
+        timerDisplay.innerText = `TIME IS UP`;
+        submit.click();
+        clearInterval(timeout);
+
+      }
+
+
+      timerDisplay.innerText = counterDisplay;
+    }, 1000);
+  }
+
   // Calculate the score
   const calculateScore = () => {
+    const scoreDisplay = document.querySelector("#score");
     let score = 0;
     quizArray.map((quizItem, index) => {
       for (let i = 0; i < 4; i++) {
@@ -76,15 +116,54 @@ window.addEventListener('DOMContentLoaded', () => {
 
         if (quizItem.a == i) {
           //change background color of li element here
+          liElement.style.backgroundColor = "green";
         }
 
         if (radioElement.checked) {
           // code for task 1 goes here
+
+          if(quizItem.a == i ){
+
+            score += 20;
+
+          }
+           
+          
+
+          
+          }
         }
       }
-    });
+    );
+
+    scoreDisplay.innerText = score;
   };
 
   // call the displayQuiz function
   displayQuiz();
+
+  // function to add the submit event 
+   
+  const submit = document.querySelector('#btnSubmit');
+
+  submit.addEventListener('click',calculateScore);
+  submit.addEventListener('click',() => {
+    clearInterval(countdown.setInterval);
+  })
+
+  // function to reload the page 
+
+  const reset = document.querySelector("#btnReset");
+
+  reset.addEventListener('click' , () =>{
+    window.location.reload();
+    displayQuiz();
+
+  })
+
+
+
+
+start.addEventListener('click',countdown);
+  
 });
