@@ -19,50 +19,48 @@
       5. Add a countdown timer - when the time is up, end the quiz, display the score and highlight the correct answers
 *************************** */
 
-window.addEventListener('DOMContentLoaded', () => {
-  const start = document.querySelector('#start');
-  start.addEventListener('click', function (e) {
-    document.querySelector('#quizBlock').style.display = 'block';
-    start.style.display = 'none';
-
+window.addEventListener("DOMContentLoaded", () => {
+  const start = document.querySelector("#start");
+  start.addEventListener("click", function (e) {
+    document.querySelector("#quizBlock").style.display = "block";
+    start.style.display = "none";
   });
   // quizArray QUESTIONS & ANSWERS
   // q = QUESTION, o = OPTIONS, a = CORRECT ANSWER
   // Basic ideas from https://code-boxx.com/simple-javascript-quiz/
   const quizArray = [
     {
-      q: 'Which is the third planet from the sun?',
-      o: ['Saturn', 'Earth', 'Pluto', 'Mars'],
+      q: "Which is the third planet from the sun?",
+      o: ["Saturn", "Earth", "Pluto", "Mars"],
       a: 1, // array index 1 - so Earth is the correct answer here
     },
     {
-      q: 'Which is the largest ocean on Earth?',
-      o: ['Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean', 'Pacific Ocean'],
+      q: "Which is the largest ocean on Earth?",
+      o: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
       a: 3,
     },
     {
-      q: 'What is the capital of Australia',
-      o: ['Sydney', 'Canberra', 'Melbourne', 'Perth'],
+      q: "What is the capital of Australia",
+      o: ["Sydney", "Canberra", "Melbourne", "Perth"],
       a: 1,
     },
-     {
-      q: 'What is the capital of Nepal',
-      o: ['Pokhara', 'Biratnagar', 'Kathmandu', 'Dhangadhi'],
+    {
+      q: "What is the capital of Nepal",
+      o: ["Pokhara", "Biratnagar", "Kathmandu", "Dhangadhi"],
       a: 2,
     },
     {
-      q: 'Which is highest peak in the world',
-      o: ['Mt.Welligton', 'K2', 'Annapurna', 'Sagarmatha'],
+      q: "Which is highest peak in the world",
+      o: ["Mt.Welligton", "K2", "Annapurna", "Sagarmatha"],
       a: 3,
     },
-
   ];
 
   // function to Display the quiz questions and answers from the object
   const displayQuiz = () => {
-    const quizWrap = document.querySelector('#quizWrap');
-   
-    let quizDisplay = '';
+    const quizWrap = document.querySelector("#quizWrap");
+
+    let quizDisplay = "";
     quizArray.map((quizItem, index) => {
       quizDisplay += `<ul class="list-group">
                    Q - ${quizItem.q}
@@ -79,28 +77,37 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  //function to return the true when submit button clicked
 
-  // function to display the countdown 
+  let submitStatus = false;
+  const submitClicked = () => {
+    submitStatus = true;
+  };
+
+  // function to display the countdown
 
   const countdown = () => {
-
-    const submit = document.querySelector('#btnSubmit');
+    const submit = document.querySelector("#btnSubmit");
+    submit.addEventListener("click", submitClicked);
     let counter = 60;
     timerDisplay = document.querySelector("#time");
     const timeout = setInterval(() => {
       counter--;
       counterDisplay = `00:${counter}`;
+
       if (counter < 1) {
         timerDisplay.innerText = `TIME IS UP`;
         submit.click();
         clearInterval(timeout);
-
       }
 
+      if (submitStatus == true) {
+        clearInterval(timeout);
+      }
 
       timerDisplay.innerText = counterDisplay;
     }, 1000);
-  }
+  };
 
   // Calculate the score
   const calculateScore = () => {
@@ -111,8 +118,8 @@ window.addEventListener('DOMContentLoaded', () => {
         //highlight the li if it is the correct answer
         let li = `li_${index}_${i}`;
         let r = `radio_${index}_${i}`;
-        liElement = document.querySelector('#' + li);
-        radioElement = document.querySelector('#' + r);
+        liElement = document.querySelector("#" + li);
+        radioElement = document.querySelector("#" + r);
 
         if (quizItem.a == i) {
           //change background color of li element here
@@ -122,19 +129,12 @@ window.addEventListener('DOMContentLoaded', () => {
         if (radioElement.checked) {
           // code for task 1 goes here
 
-          if(quizItem.a == i ){
-
+          if (quizItem.a == i) {
             score += 20;
-
-          }
-           
-          
-
-          
           }
         }
       }
-    );
+    });
 
     scoreDisplay.innerText = score;
   };
@@ -142,28 +142,19 @@ window.addEventListener('DOMContentLoaded', () => {
   // call the displayQuiz function
   displayQuiz();
 
-  // function to add the submit event 
-   
-  const submit = document.querySelector('#btnSubmit');
+  // function to add the submit event
 
-  submit.addEventListener('click',calculateScore);
-  submit.addEventListener('click',() => {
-    clearInterval(countdown.setInterval);
-  })
+  const submit = document.querySelector("#btnSubmit");
 
-  // function to reload the page 
+  submit.addEventListener("click", calculateScore);
+
+  // function to reload the page
 
   const reset = document.querySelector("#btnReset");
 
-  reset.addEventListener('click' , () =>{
+  reset.addEventListener("click", () => {
     window.location.reload();
-    displayQuiz();
+  });
 
-  })
-
-
-
-
-start.addEventListener('click',countdown);
-  
+  start.addEventListener("click", countdown);
 });
